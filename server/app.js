@@ -9,6 +9,7 @@ import { notFound,errorHandler } from './middlewares/errorHandling.moddleware.js
 
 import CategoryRouter from './routes/category.routes.js'
 import UserRouter from './routes/user.routes.js'
+import RecipeRouter from './routes/recipe.routes.js'
 
 config()
 connectDB()
@@ -26,7 +27,13 @@ app.use(express.urlencoded({ extended: true }));
 //אחרי כל בקשה השרת מדפיס את הנתונים
 app.use(morgan('dev'));
 
-app.use(cors())
+// CORS configuration - allow Angular dev server
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:4200',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}))
 
 //middlewares before request
 
@@ -37,6 +44,8 @@ app.get('/',(req, res) => {
 app.use('/category',CategoryRouter)
 
 app.use('/user',UserRouter)
+
+app.use('/recipe',RecipeRouter)
 
 //middlewares after request
 
