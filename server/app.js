@@ -12,7 +12,10 @@ import UserRouter from './routes/user.routes.js'
 import RecipeRouter from './routes/recipe.routes.js'
 
 config()
-connectDB()
+// Connect to DB (non-blocking - server will run even if DB is unavailable)
+connectDB().catch(err => {
+    console.log('Database connection failed, but server will continue running');
+})
 
 
 //עליו מעמיסים את כל הניתובים

@@ -1,0 +1,125 @@
+<div class="recipe-list-container">
+    <header class="recipe-list-header">
+      <h1>מתכונים</h1>
+      <p class="recipe-count" *ngIf="recipeCount() > 0">
+        נמצאו {{ recipeCount() }} מתכונים
+      </p>
+    </header>
+  
+    <!-- Loading State -->
+    @if (isLoading()) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>טוען מתכונים...</p>
+      </div>
+    }
+  
+    <!-- Error State -->
+    @if (error()) {
+      <div class="error-container">
+        <div class="error-message">
+          <h3>שגיאה</h3>
+          <p>{{ error() }}</p>
+          <button class="retry-button" (click)="loadRecipes()">
+            נסה שוב
+          </button>
+        </div>
+      </div>
+    }
+  
+    <!-- Recipes Grid -->
+    @if (hasRecipes() && !isLoading()) {
+      <div class="recipes-grid">
+        @for (recipe of recipes(); track trackByRecipeId($index, recipe)) {
+          <div class="recipe-card">
+            <!-- Recipe Image -->
+            @if (recipe.img) {
+              <div class="recipe-image">
+                <img 
+                  [src]="recipe.img" 
+                  [alt]="recipe.name"
+                  loading="lazy"
+                  (error)="$event.target.style.display='none'"
+                />
+              </div>
+            } @else {
+              <div class="recipe-image-placeholder">
+                <span>🍽️</span>
+              </div>
+            }
+  
+            <!-- Recipe Content -->
+            <div class="recipe-content">
+              <h3 class="recipe-title">{{ recipe.name }}</h3>
+              
+              @if (recipe.description) {
+                <p class="recipe-description">{{ recipe.description }}</p>
+              }
+  
+              <!-- Recipe Meta -->
+              <div class="recipe-meta">
+                <div class="meta-item">
+                  <span class="meta-label">זמן הכנה:</span>
+                  <span class="meta-value">{{ recipe.preparationTime }} דקות</span>
+                </div>
+                
+                <div class="meta-item">
+                  <span class="meta-label">רמת קושי:</span>
+                  <span class="meta-value difficulty-badge" 
+                        [class]="getDifficultyClass(recipe.difficultyLevel)">
+                    {{ getDifficultyLabel(recipe.difficultyLevel) }}
+                  </span>
+                </div>
+              </div>
+  
+              <!-- Categories -->
+              @if (recipe.categories && recipe.categories.length > 0) {
+                <div class="recipe-categories">
+                  @for (category of recipe.categories; track category._id) {
+                    <span class="category-tag">{{ category.description }}</span>
+                  }
+                </div>
+              }
+  
+              <!-- Ingredients Preview -->
+              @if (recipe.layers && recipe.layers.length > 0) {
+                <div class="ingredients-preview">
+                  <h4>רכיבים עיקריים:</h4>
+                  <ul>
+                    @for (layer of recipe.layers.slice(0, 2); track $index) {
+                      <li>{{ layer.ingredients.join(', ') }}</li>
+                    }
+                    @if (recipe.layers.length > 2) {
+                      <li class="more-ingredients">ועוד {{ recipe.layers.length - 2 }} שכבות...</li>
+                    }
+                  </ul>
+                </div>
+              }
+  
+              <!-- Owner Info -->
+              @if (recipe.owner) {
+                <div class="recipe-owner">
+                  <small>מאת: {{ recipe.owner.name }}</small>
+                </div>
+              }
+            </div>
+          </div>
+        } @empty {
+          <div class="empty-state">
+            <span class="empty-icon">📝</span>
+            <h3>אין מתכונים עדיין</h3>
+            <p>היה הראשון להוסיף מתכון!</p>
+          </div>
+        }
+      </div>
+    }
+  
+    <!-- Empty State when no recipes -->
+    @if (!hasRecipes() && !isLoading() && !error()) {
+      <div class="empty-state">
+        <span class="empty-icon">🍳</span>
+        <h3>אין מתכונים עדיין</h3>
+        <p>היה הראשון להוסיף מתכון!</p>
+      </div>
+    }
+  </div>
