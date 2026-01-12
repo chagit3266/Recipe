@@ -22,7 +22,7 @@ export const blockGuest = (req, res, next) => {
     next();
 };
 
-export const checkAdmi = (req, res, next) => {
+export const checkAdmin = (req, res, next) => {
     req.isAdmin=true
     next()
 }

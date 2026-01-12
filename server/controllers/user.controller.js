@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
-import { JoiUserSchema } from '../models/User.model.js'
+import { JoiUserSchema,generateToken } from '../models/User.model.js'
 import User from '../models/User.model.js'
+
 
 export const getAllUsers = async (req, res, next) => {
     try {
@@ -63,8 +64,8 @@ export const signUp = async (req, res, next) => {
             value.role = 'admin';
         }
         const user = new User(value)
-        await user.save()
         const token = generateToken(user);
+        await user.save()
         res.status(201).json({ userName: user.name, token })
     } catch (error) {
         next({ status: error.status, message: error.message });

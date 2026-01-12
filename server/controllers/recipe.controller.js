@@ -16,7 +16,7 @@ export const getAllRecipe = async (req, res, next) => {
             query.name = { $regex: search, $options: 'i' }
         if (!isNaN(maxTime))
             query.preparationTime = { $lte: maxTime }
-        limit = parseInt.max(+limit || await Recipe.countDocuments(query), 1);//ע"מ למנוי ערכים שליליים
+        limit = Math.max(+limit || await Recipe.countDocuments(query), 1);//ע"מ למנוי ערכים שליליים
         const skip = ((parseInt(page) || 1) - 1) * limit;
         let recipes = await Recipe.find(query).skip(skip).limit(limit)
 

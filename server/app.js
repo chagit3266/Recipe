@@ -9,8 +9,11 @@ import { notFound,errorHandler } from './middlewares/errorHandling.moddleware.js
 
 import CategoryRouter from './routes/category.routes.js'
 import UserRouter from './routes/user.routes.js'
+import RecipeRouter from './routes/recipe.routes.js'
 
-config()
+const result = config();
+console.log('dotenv load result', result);
+
 connectDB()
 
 
@@ -30,13 +33,17 @@ app.use(cors())
 
 //middlewares before request
 
+
 app.get('/',(req, res) => {
     res.json('HELLO TO YOU');
+    console.log('HELLO TO YOU');   
 })
 
 app.use('/category',CategoryRouter)
 
 app.use('/user',UserRouter)
+
+app.use('/recipe',RecipeRouter)
 
 //middlewares after request
 
