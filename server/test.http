@@ -1,0 +1,19 @@
+### Test Server Root
+GET http://localhost:5000
+
+### Test Categories
+GET http://localhost:5000/category
+
+### Test Recipes (without auth - should work)
+GET http://localhost:5000/recipe
+
+### Test Recipes with search
+GET http://localhost:5000/recipe?search=pasta&limit=5
+
+### Test Recipe by ID (replace with actual ID)
+GET http://localhost:5000/recipe/123456789012345678901234
+
+### Test with Auth Token (replace YOUR_TOKEN)
+GET http://localhost:5000/recipe
+Authorization: Bearer YOUR_TOKEN
+

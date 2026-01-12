@@ -11,10 +11,14 @@ import CategoryRouter from './routes/category.routes.js'
 import UserRouter from './routes/user.routes.js'
 import RecipeRouter from './routes/recipe.routes.js'
 
-const result = config();
-console.log('dotenv load result', result);
 
-connectDB()
+
+config()
+// Connect to DB (non-blocking - server will run even if DB is unavailable)
+connectDB().catch(err => {
+    console.log('Database connection failed, but server will continue running');
+})
+
 
 
 //עליו מעמיסים את כל הניתובים
@@ -29,7 +33,13 @@ app.use(express.urlencoded({ extended: true }));
 //אחרי כל בקשה השרת מדפיס את הנתונים
 app.use(morgan('dev'));
 
-app.use(cors())
+// CORS configuration - allow Angular dev server
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:4200',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}))
 
 //middlewares before request
 
